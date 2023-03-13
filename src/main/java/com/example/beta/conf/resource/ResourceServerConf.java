@@ -1,6 +1,5 @@
 package com.example.beta.conf.resource;
 
-import jdk.nashorn.internal.parser.Token;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -24,13 +23,13 @@ public class ResourceServerConf extends ResourceServerConfigurerAdapter {
     private static final String RESOURCE_ID = "app";
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+    public void configure(ResourceServerSecurityConfigurer resources) {
         resources
                 // 资源id
                 .resourceId(RESOURCE_ID)
                 // 使用远程服务验证token
 //                .tokenServices(tokenServices())
-                // 配合授权服务器的私钥自己验证token
+                // 配合授权服务器提供的私钥自己验证token
                 .tokenStore(tokenStore)
                 // 无状态模式
                 .stateless(false);
@@ -39,6 +38,7 @@ public class ResourceServerConf extends ResourceServerConfigurerAdapter {
     /**
      * 调用授权服务器的验证token接口
      */
+    @SuppressWarnings("all")
     private ResourceServerTokenServices tokenServices() {
         RemoteTokenServices services = new RemoteTokenServices();
         services.setCheckTokenEndpointUrl("http://localhost:8088/oauth/check_token");
